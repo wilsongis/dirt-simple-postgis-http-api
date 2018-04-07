@@ -1,0 +1,11 @@
+.directory
+.directory
+.htaccess
+node_modules
+deploy.sh
+public
+TODO.md
+.vscode
+dist
+yarn-error.log
+geoportal.sublime-project
