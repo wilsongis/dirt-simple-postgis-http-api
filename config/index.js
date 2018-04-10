@@ -21,7 +21,7 @@ module.exports = {
     host: 'localhost',
     port: 8123,
     db: {
-        postgis: 'postgres://user:password@server/database'
+        postgis: 'postgres://webview:viewerasdf@apnsgis1/montgomery'
     },
     cache: {
         expiresIn: 30 * 1000,
