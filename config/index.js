@@ -43,9 +43,9 @@ module.exports = {
             }
         },
         park: {
-            table: 'parks p, tax_parcels t',
-            columns: `p.gid as id, prkname as label, 'PARK' as type, round(ST_X(ST_Transform(p.the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(p.the_geom, 4326))::NUMERIC,4) as lat, t.pid as pid, prkaddr as address`,
-            where: 'prkname ilike ? and p.the_geom && t.the_geom',
+            table: 'parks p, parc_addr t',
+            columns: `p.objectid as id, p.name as label, 'PARK' as type, st_x(st_point(st_centroid(p.shape))) as lng, st_y(st_point(st_centroid(p.shape))) as lat, t.gislink as pid, p.name as address`,
+            where: 'name ilike ? and p.shape && t.shape',
             format: function(query) {
                 return '%' + query.trim() + '%';
             }
@@ -67,9 +67,9 @@ module.exports = {
             }
         },
         school: {
-            table: 'schools s, tax_parcels p',
-            columns: `s.gid as id, schlname as label, 'SCHOOL' as type, round(ST_X(ST_Transform(s.the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(s.the_geom, 4326))::NUMERIC,4) as lat, p.pid as pid, address`,
-            where: `schlname ilike ? and s.the_geom && p.the_geom`,
+            table: 'schoolpoint s, parc_addr p',
+            columns: `s.objectid as id, s.school_nam as label, 'SCHOOL' as type, round(ST_X(s.shape)::NUMERIC,4) as lng, round(ST_Y(s.shape)::NUMERIC,4) as lat, p.gislink as pid, s.address`,
+            where: `s.school_nam ilike ? and s.shape && p.shape`,
             format: function(query) {
                 return '%' + query.trim() + '%';
             }
