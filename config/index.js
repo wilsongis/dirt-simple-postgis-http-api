@@ -29,11 +29,17 @@ module.exports = {
     },
     search: {
         address: {
-            table: 'master_address_table',
-            columns: `objectid as id, full_address as label, 'ADDRESS' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat, num_parent_parcel as pid, full_address as address`,
-            where: `ts @@ to_tsquery('addressing_en', ?) and cde_status='A' and num_x_coord > 0`,
-            format: function(query) {
-                return query.trim().toUpperCase().replace(/ /g, '&') + ':*';
+            table: 'parc_addr',
+            columns: `objectid as id, propertyad as label, 'ADDRESS' as type, parcelpo_1 as lng, parcelpo_2 as lat, gislink as pid, propertyad as address`,
+            where: `propertyad ilike ?`,
+            format: function(query) { return '%' + query.trim() + '%'; 
+            }
+        },
+        owner: {
+            table: 'parc_addr',
+            columns: `objectid as id, owner as label, 'OWNER' as type, parcelpo_1 as lng, parcelpo_2 as lat, gislink as pid, propertyad as address`,
+            where: `owner ilike ?`,
+            format: function(query) { return '%' + query.trim() + '%'; 
             }
         },
         park: {
@@ -64,14 +70,6 @@ module.exports = {
             table: 'schools s, tax_parcels p',
             columns: `s.gid as id, schlname as label, 'SCHOOL' as type, round(ST_X(ST_Transform(s.the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(s.the_geom, 4326))::NUMERIC,4) as lat, p.pid as pid, address`,
             where: `schlname ilike ? and s.the_geom && p.the_geom`,
-            format: function(query) {
-                return '%' + query.trim() + '%';
-            }
-        },
-        business: {
-            table: 'businesswise_businesses b, tax_parcels p',
-            columns: `b.gid as id, company as label, 'BUSINESS' as type, round(ST_X(ST_Transform(b.the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(b.the_geom, 4326))::NUMERIC,4) as lat, p.pid as pid, address`,
-            where: `company ilike ? and b.the_geom && p.the_geom`,
             format: function(query) {
                 return '%' + query.trim() + '%';
             }
